@@ -1,5 +1,4 @@
 package teamassignment1;
-
 import java.util.Scanner;
 
 public class Main {
@@ -10,7 +9,7 @@ public class Main {
     static class Lagu {
         private String judul;
         private String artis;
-        private double durasi;
+        private double durasi; // disimpan dalam menit (desimal)
 
         public Lagu(String judul, String artis, double durasi) {
             this.judul = judul;
@@ -29,7 +28,7 @@ public class Main {
     }
 
     // =========================
-    // CLASS USER (PARENT)
+    // CLASS USER
     // =========================
     static class User {
         protected String nama;
@@ -69,6 +68,7 @@ public class Main {
             System.out.println("Admin: tambah & lihat lagu");
         }
 
+        // Tambah lagu ke array
         public Lagu[] tambahLagu(Lagu[] playlist, Lagu laguBaru) {
             Lagu[] baru = new Lagu[playlist.length + 1];
 
@@ -127,13 +127,30 @@ public class Main {
     }
 
     // =========================
-    // MAIN PROGRAM (INTERAKTIF)
+    // FUNCTION KONVERSI mm:ss → double
+    // =========================
+    public static double konversiDurasi(String input) {
+        try {
+            String[] parts = input.split(":");
+
+            int menit = Integer.parseInt(parts[0]);
+            int detik = Integer.parseInt(parts[1]);
+
+            return menit + (detik / 60.0);
+        } catch (Exception e) {
+            System.out.println("Format salah! Gunakan mm:ss (contoh: 4:51)");
+            return 0;
+        }
+    }
+
+    // =========================
+    // MAIN
     // =========================
     public static void main(String[] args) {
 
         Scanner input = new Scanner(System.in);
 
-        Lagu[] playlist = new Lagu[0]; // awal kosong
+        Lagu[] playlist = new Lagu[0];
         Admin admin = new Admin("Admin");
         Member member = new Member("User");
 
@@ -148,20 +165,21 @@ public class Main {
             System.out.println("0. Keluar");
             System.out.print("Pilih menu: ");
             pilihan = input.nextInt();
-            input.nextLine(); // buang newline
+            input.nextLine();
 
             switch (pilihan) {
 
                 case 1:
-                    // Input lagu baru
                     System.out.print("Judul: ");
                     String judul = input.nextLine();
 
                     System.out.print("Artis: ");
                     String artis = input.nextLine();
 
-                    System.out.print("Durasi (menit): ");
-                    double durasi = input.nextDouble();
+                    System.out.print("Durasi (mm:ss): ");
+                    String durasiInput = input.nextLine();
+
+                    double durasi = konversiDurasi(durasiInput);
 
                     Lagu laguBaru = new Lagu(judul, artis, durasi);
                     playlist = admin.tambahLagu(playlist, laguBaru);
